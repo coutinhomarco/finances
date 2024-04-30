@@ -7,9 +7,9 @@ import {
   Navigate
 } from 'react-router-dom';
 import {  useAuth } from './context/AuthContext';
-import Sidebar from './components/Sidebar';
-import MainContent from './components/MainContent';
-import Login from './components/Login';
+import Sidebar from './components/common/Sidebar';
+import MainContent from './components/dashboard/MainContent';
+import Login from './components/auth/Login';
 import NotFound from './components/NotFound';
 
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
