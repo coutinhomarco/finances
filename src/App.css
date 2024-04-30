@@ -4,3 +4,7 @@
 }
 .income { color: #4CAF50; }
 .expense { color: #F44336; }
+.mw {
+  max-width: 400px;
+  /* margin: 0 auto; */
+}
