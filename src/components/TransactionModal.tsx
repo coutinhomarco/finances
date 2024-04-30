@@ -1,30 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
-// import { Transaction } from '../data/transactions';
+import { Transaction } from '../types/transaction';
 
 interface TransactionModalProps {
-  transaction: any;
-  onSave: (transaction: any) => void;
+  transaction: Transaction | null;
+  onSave: (transaction: Transaction) => void;
   onClose: () => void;
 }
 
 const TransactionModal: React.FC<TransactionModalProps> = ({ transaction, onSave, onClose }) => {
-  const [date, setDate] = useState(transaction.date);
-  const [description, setDescription] = useState(transaction.description);
-  const [category, setCategory] = useState(transaction.category);
-  const [amount, setAmount] = useState(transaction.amount);
+  const [id, setId] = useState<number>(Date.now());
+  const [date, setDate] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [category, setCategory] = useState<'Income' | 'Expense'>('Income');
+  const [amount, setAmount] = useState<number>(0);
 
   useEffect(() => {
-    setDate(transaction.date);
-    setDescription(transaction.description);
-    setCategory(transaction.category);
-    setAmount(transaction.amount);
+    if (transaction) {
+      setId(transaction.id);
+      setDate(transaction.date);
+      setDescription(transaction.description);
+      setCategory(transaction.category);
+      setAmount(transaction.amount);
+    } else {
+      setId(Date.now());
+      setDate('');
+      setDescription('');
+      setCategory('Income');
+      setAmount(0);
+    }
   }, [transaction]);
 
   const handleSave = () => {
-    onSave({ ...transaction, date, description, category, amount });
+    onSave({
+      id: id,
+      date: date,
+      description: description,
+      category: category,
+      amount: amount
+    });
   };
 
   return (
@@ -33,16 +46,16 @@ const TransactionModal: React.FC<TransactionModalProps> = ({ transaction, onSave
         <span onClick={onClose} className="close">&times;</span>
         <form>
           <label htmlFor="date">Date:</label>
-          <input type="date" id="date" name="date" value={date} onChange={e => setDate(e.target.value)} /><br /><br />
+          <input type="date" id="date" value={date} onChange={e => setDate(e.target.value)} /><br /><br />
           <label htmlFor="description">Description:</label>
-          <input type="text" id="description" name="description" value={description} onChange={e => setDescription(e.target.value)} /><br /><br />
+          <input type="text" id="description" value={description} onChange={e => setDescription(e.target.value)} /><br /><br />
           <label htmlFor="category">Category:</label>
-          <select id="category" name="category" value={category} onChange={e => setCategory(e.target.value)}>
+          <select id="category" value={category} onChange={e => setCategory(e.target.value as 'Income' | 'Expense')}>
             <option value="Income">Income</option>
             <option value="Expense">Expense</option>
           </select><br /><br />
           <label htmlFor="amount">Amount:</label>
-          <input type="number" id="amount" name="amount" value={amount} onChange={e => setAmount(parseInt(e.target.value))} /><br /><br />
+          <input type="number" id="amount" value={amount} onChange={e => setAmount(parseInt(e.target.value))} /><br /><br />
           <button type="button" onClick={handleSave} className="button-save">Save</button>
           <button type="button" onClick={onClose} className="button-cancel">Cancel</button>
         </form>
